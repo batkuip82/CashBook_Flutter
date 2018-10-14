@@ -2,19 +2,17 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:date_format/date_format.dart';
 
-class CashBookEntry {
-  CashBookEntry(String date, String amount) {
-    entryDate = date;
-    entryAmount = amount;
-  }
+class CashBookItem {
+  //CashBookItem(){};
+  CashBookItem.add(this._entryDate, this._entryAmount);
 
-  String entryDate;
-  String entryAmount;
+  String _entryDate;
+  String _entryAmount;
 }
 
 class DashBoardState extends State<DashBoard> {
   TextEditingController valueController = TextEditingController();
-  final List<CashBookEntry> items = List();
+  final List<CashBookItem> items = List();
   static TextField amountField;
 
   @override
@@ -76,28 +74,31 @@ class DashBoardState extends State<DashBoard> {
                     itemBuilder: (context, index) => Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Text(items[index].entryDate),
-                              Text(items[index].entryAmount),
+                              Text(items[index]._entryDate),
+                              Text(items[index]._entryAmount),
                             ])))
           ])),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          items.add(CashBookEntry(_dateValue, valueController.text));
-          valueController.clear();
-          setState(() {});
-          // return showDialog(
-          //   context: context,
-          //   builder: (context) {
-          //     return AlertDialog(
-          //       // Retrieve the text the user has typed in using our
-          //       // TextEditingController
-          //       content: Text(valueController.text),
-        },
-        tooltip: 'Show me the value!',
+        onPressed: _openAddEntryDialog,
+        tooltip: 'Add new cashbook item',
         child: Icon(Icons.add),
       ),
     );
   }
+
+  Future _openAddEntryDialog() async {
+    CashBookItem save =
+    await Navigator.of(context).push(new MaterialPageRoute<CashBookItem>(
+        builder: (BuildContext context) {
+          // return new WeightEntryDialog.add(
+          //     weightSaves.isNotEmpty ? weightSaves.last.weight : 60.0);
+        },
+        fullscreenDialog: true));
+    if (save != null) {
+      //_addWeightSave(save);
+    }
+  }
+  
 }
 
 class DashBoard extends StatefulWidget {
